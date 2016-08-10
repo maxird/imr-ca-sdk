@@ -15,19 +15,18 @@
 	media="print">
 
 <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
 
-<title>IMR CA Sandbox - edit</title>
 </head>
-<title>IMR CA Sandbox</title>
+<title>CA IMR Sandbox</title>
 </head>
 
 <body>
 	<header>
 		<div class="inner">
-			<h1>IMR CA Sandbox</h1>
-			<h2>IMR CA SDK &amp; Sandbox</h2>
+			<h1>CA IMR Sandbox</h1>
+			<h2>CA IMR Document Exchange Portal Sandbox</h2>
 			<a href="https://github.com/maxird/imr-ca-sdk" class="button"><small>View
 					project on</small> GitHub</a>
 		</div>
@@ -37,7 +36,7 @@
 		<div class="inner clearfix">
 			<section id="main-content">
 				<h3>
-					<a id="imr-ca-sdk--sandbox" class="anchor" href="#imr-ca-sdk--sandbox" aria-hidden="true">
+					<a id="imr-ca-sandbox-welcome" class="anchor" href="#imr-ca-sandbox-welcome-link" aria-hidden="true">
 						<span aria-hidden="true" class="octicon octicon-link"></span>
 					</a>
 					Welcome
@@ -51,21 +50,25 @@
 					the site.
 				</p>
 				<h3>
-					<a id="imr-ca-sdk--sandbox" class="anchor"
-						href="#imr-ca-sdk--sandbox" aria-hidden="true"><span
-						aria-hidden="true" class="octicon octicon-link"></span></a>Accessing
-					the Portal
+					<a id="imr-ca-sandbox-overview" class="anchor"
+						href="#imr-ca-sandbox-overview-link" aria-hidden="true">
+						<span
+							aria-hidden="true" class="octicon octicon-link">
+						</span>
+					</a>
+					Accessing the Portal
 				</h3>
-				<p>In order to log into the portal, users must first be assigned
-					a user name and password. Within each Claims Administrator and
-					Utilization Review organization participating in the pilot, a
-					designated administrator has been selected to manage the group’s
-					users. The portal supports 2 different mechanisms to provision new
-					users. The first method requires the administrator to use to the
-					available KeyCloak console to register a user. The second method
-					involves completing a user enrollment spreadsheet and submitting it
-					to MAXIMUS for processing. Once a user is registered, an email
-					notification is issued by the portal to the user with additional log-in
+				<p>
+					In order to log into the portal, users must first be assigned
+					a user name and password. Each Claims Administrator and
+					Utilization Review Organization participating in the pilot must 
+					designate an in-house administrator who will manage the group’s
+					user access. The portal offers 2 different mechanisms to provision 
+					new users. The first method permits the administrator to manually
+					register users online.  An alternative approach allows the administrator
+					to fill out a user enrollment spreadsheet and submitting it
+					to MAXIMUS for processing. As each new user is registered, an email
+					notification is issued by the portal to the user with further log-in
 					instructions.
 				</p>
 				<p>
@@ -73,45 +76,47 @@
 						target="_blank">SandBox</a>.
 				</p>
 				<h3>
-					<a id="imr-ca-sdk--sandbox" class="anchor"
-						href="#imr-ca-sdk--sandbox" aria-hidden="true"><span
-						aria-hidden="true" class="octicon octicon-link"></span>
+					<a id="imr-ca-sandbox-feedback" class="anchor"
+						href="#imr-ca-sdk-feedback-link" aria-hidden="true">
+						<span
+							aria-hidden="true" class="octicon octicon-link">
+						</span>
 					</a>
-					Available 	Web Services
+					Comments and Questions
 				</h3>
-				<div>
-					Several key portal functions are exposed as REST style
-					services. These include:
-					<ul>
-						<li>Retrieving NOARFI Notices by date range. The service also
-							includes an ability to filter out cases for which at least one
-							document was already received through the portal from the
-							requester.</li>
-						<li>Uploading documents to a case. Files can be either be
-							uploaded with a file name that is in conformance with existing
-							MoveIt naming standard for automatic case mapping or an additional
-							case number can be supplied with files containing a non-standard
-							file name.</li>
-						<li>Retrieving a list of all documents for a specified case.
-							Document list details include a unique document id, the creation
-							date, the last updated date, source of the document, and type of
-							document.</li>
-						<li>Requesting a specific document using its unique document
-							id</li>
-						<li>Obtaining a list of active cases. Case list details
-							include the case’s id, current case status, case status date, and
-							the date the case was last updated.</li>
-					</ul>
-					An available SDK offers detailed documentation for each available
-					web service along with working Java and JavaScript sample clients.
-				</div>
+				<p>
+					The design of the document exchange portal is a "work in progress".  Our goal
+					is to add new features to make it as useful as possible for its users.  If you 
+					have any questions or suggested improvements, please use this GitHub
+					<a href="https://github.com/maxird/imr-ca-sdk" target="_blank">	feedback page.</a> 
+				</p>
+				<p>
+					If you require immediate assistance please contact Eric Liam by
+					<a href="mailto:EricLian@maximus.com?Subject=CA IMR Portal Assistance" target="_top">Email</a>
+					or by phone at (925) 395-3896.
+				</p>
+				<h3>
+					<a id="imr-ca-sandbox-sdk-link" class="anchor"
+						href="#imr-ca-sdk--sandbox-link" aria-hidden="true">
+						<span
+							aria-hidden="true" class="octicon octicon-link">
+						</span>
+					</a>
+					Technical Documentation
+				</h3>
+				<p>
+					In addition to the available screens, the document exchange portal offers
+					web service APIs to enable system to system exchanges. An SDK is provided
+					that contains technical documentation and sample web clients.
+				</p>
+				<p>
+					View the <a href="http://imr-ca-sandbox/sdkoverview.html"
+						target = "_self">SDK Documentation</a>
+				</p>
 			</section>
-
 			<aside id="sidebar">
 				<a href="https://github.com/maxird/imr-ca-sdk/zipball/master"
-					class="button"> <small>Download</small> .zip file
-				</a> <a href="https://github.com/maxird/imr-ca-sdk/tarball/master"
-					class="button"> <small>Download</small> .tar.gz file
+					class="button"> <small>download</small> User Manual
 				</a>
 
 				<p class="repo-owner">
