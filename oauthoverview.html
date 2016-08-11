@@ -15,6 +15,8 @@
 	href="stylesheets/github-light.css" media="screen">
 <link rel="stylesheet" type="text/css" href="stylesheets/print.css"
 	media="print">
+<link rel="stylesheet" type="text/css" href="stylesheets/breadcrumbs.css"
+	media="screen">
 
 <!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -30,6 +32,11 @@
 			<a href="https://github.com/maxird/imr-ca-sdk" class="button"><small>View
 					project on</small> GitHub</a>
 		</div>
+		<ul id="breadcrumb">
+		  <li><a href="http://imrcasdk.maxird.com/index.html"><span class="icon icon-home"> </span></a></li>
+  			<li><a href="http://imrcasdk.maxird.com/sdkoverview.html"><span class="icon icon-double-angle-right"> </span> SdK Overview</a></li>
+  			<li><a href="#"><span class="icon icon-double-angle-right"></span> OAuth Overview</a></li>
+		</ul>
 	</header>
 
 	<div id="content-wrapper">
@@ -65,11 +72,11 @@
 				<div>
 					At a high level the OAuth 2.0 process flow is as follows:
 					<ul>
-						<li>Step 1:  Your client software will issue a request to Keycloak that contains this 
+						<li><b>Step 1:</b> Your client software will issue a request to Keycloak that contains this 
 									user name and password to  in turn acquire O-Auth 2 Access and Refresh tokens.</li>  
-						<li>Step 2: Your client software can now issue valid RESTful service requests to 
+						<li><b>Step 2:</b> Your client software can now issue valid RESTful service requests to 
 									the Maximus DXC server by passing the Access token as part of the request.</li>
-						<li>Step 3.  Maximus Access tokens currently have an expiration time period of 24
+						<li><b>Step 3.</b>  Maximus Access tokens currently have an expiration time period of 24
 								 	hours.  Access tokens that expire while a web service request is running can 
 								 	encounter problems.   As the expiration time approaches on your Access token, 
 								 	a replacement can be obtained from the Keycloak authentication server using your
@@ -77,7 +84,7 @@
 								 	the Refresh Token is relatively long lived, currently 6 months.  Note, Refresh 
 								 	tokens are blacklisted by the authorization server when system-to-system access 
 								 	rights are terminated.</li>
-						<li>Step 4. Once the Refresh Token expires, the user will be required to repeat Step 2 
+						<li><b>Step 4.</b> Once the Refresh Token expires, the user will be required to repeat Step 2 
 									to obtain new Access and Refresh tokens.</li> 
 					</ul>
 				</div>
