@@ -885,3 +885,10 @@ div#clear {
 	clear:both;
 }
 
+#OauthProcessFLow{
+	float:left;
+	height:400px;
+	width:80%;
+	margin-left:50px;
+}
+
