@@ -1,28 +1,7 @@
-* {
-  margin: 0;
-  padding: 0;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 12px;
-}
-
-body {
-  text-align: center;
-  background-color: #34495e;
-}
-
-h1 {
-  font-weight: 100;
-  font-size: 32px;
-  padding: 40px;
-  color: #fff;
-}
-
 #breadcrumb {
   list-style: none;
   display: inline-block;
+  float:left;
 }
 #breadcrumb .icon {
   font-size: 14px;
