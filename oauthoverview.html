@@ -77,7 +77,7 @@
 					<ul>
 						<li><b>Step 1:</b> Your client software will issue a request to Keycloak that contains this 
 									user name and password to  in turn acquire O-Auth 2 Access and Refresh tokens.</li>  
-						<li><b>Step 2:</b> Your client software can now issue valid RESTful service requests to 
+						<li><b>Step 2:</b> Your client software can now issue valid web service requests to 
 									the Maximus DXC server by passing the Access token as part of the request.</li>
 						<li><b>Step 3.</b>  Maximus Access tokens currently have an expiration time period of 24
 								 	hours.  Access tokens that expire while a web service request is running can 
@@ -90,6 +90,8 @@
 						<li><b>Step 4.</b> Once the Refresh Token expires, the user will be required to repeat Step 2 
 									to obtain new Access and Refresh tokens.</li> 
 					</ul>
+		      <img id="OauthProcessFLow" src="images/oauth-process-flow.png" alt="Oauth 2.0 Process Flow" 
+		      			height="80" width="120"></img>
 				</div>
 			</section>
 			<aside id="sidebar">
