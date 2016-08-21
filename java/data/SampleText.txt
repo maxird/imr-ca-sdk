@@ -1,0 +1,5 @@
+api.endpoint.base=http://imr-ca-sandbox.maxird.com/apigw
+case.search.api=webservices/rest/apigw/cases/search
+rfi.search.api=webservices/rest/apigw/cases/searchrfi
+case.document.list=webservices/rest/apigw/docs/search/cn
+case.upload.document=webservices/rest/apigw/docs/upload/cn

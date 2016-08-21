@@ -1,0 +1,7 @@
+x.*
+.vscode/
+**/[D|d]ebug
+**/[R|r]elease
+**/project.lock.json
+**/configuration.ini
+

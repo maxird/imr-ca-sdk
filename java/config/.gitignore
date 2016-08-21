@@ -1,0 +1,4 @@
+## ignore files with secrets or environment specifics
+#
+config.properties
+test.properties

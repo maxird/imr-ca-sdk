@@ -1,0 +1,9 @@
+.com.maximus.imr.rest.RESTRequestor.token.json
+*.zip
+*.pdf
+*.octet-stream
+*.iml
+target
+../java-sdk
+**/*.log
+
