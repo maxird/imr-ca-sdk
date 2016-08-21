@@ -1,6 +1,6 @@
 {
   "name": "DXCIMRCA",
-  "version": "1.0.0",
+  "version": "0.9.0",
   "description": "DXC IMR CA API",
   "title": "DXC IMR CA API",
   "url": "http://imr-ca-sandbox.maxird.com/",
@@ -16,7 +16,7 @@
   "apidoc": "0.2.0",
   "generator": {
     "name": "apidoc",
-    "time": "2016-08-19T06:01:12.448Z",
+    "time": "2016-08-21T05:51:43.223Z",
     "url": "http://apidocjs.com",
     "version": "0.16.1"
   }
