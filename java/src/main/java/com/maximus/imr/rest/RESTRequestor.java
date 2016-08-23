@@ -59,7 +59,7 @@ public abstract class RESTRequestor {
 
     private final int MILLISECONDS_IN_A_SECOND = 1000;
 
-    private final int EXPIRATION_BIAS = 1000;
+    private final int EXPIRATION_BIAS = (1000*30);    // Bias of 30 seconds.
 
     protected static final int[] OK = {200, 201, 204};
     private static Map<String, Object> tokenMap;
@@ -67,7 +67,7 @@ public abstract class RESTRequestor {
     private static File tokenCache = null;
 
     static {
-        tokenCache = new File("." + RESTRequestor.class.getName() + ".token.json");
+        tokenCache = new File(getHomeFolder()+"/." + RESTRequestor.class.getName() + ".token.json");
         if (tokenCache.exists()) {
             // read the json string from the file
             try {
@@ -255,6 +255,7 @@ public abstract class RESTRequestor {
         // if the refresh has expired, you cannot refresh  ... need to get the token
         if (refreshHasExpired(tokenMap)) {
             ClientResponse response = _getToken();
+            checkStatus(response);
             synchronized (TOKEN_GATE) {
                 tokenMap = decorateTokenMapWithExpiration(getResponseMap(response));
                 _persistTokenCache();
