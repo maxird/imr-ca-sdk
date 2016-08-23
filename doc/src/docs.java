@@ -88,9 +88,7 @@
     /**
     * @api {post} auth/realms/dxc-externals/protocol/openid-connect/token 00.Login
     * @apiName Login
-    * @apiDescription
-    *
-    * DXC web services use KeyCloak for OAuth2 (more information <a href="http://imrcasdk.maxird.com/oauthoverview.html">here</a>).
+    * @apiDescription DXC web services use KeyCloak for OAuth2 (more information <a href="http://imrcasdk.maxird.com/oauthoverview.html">here</a>).
     * Call this KeyCloak API first to login with your valid system service account credentials (see <a href="http://imrcasdk.maxird.com/oauthoverview.html#imr-ca-oauth-account-link">here</a> on how to get credentials).
     * Securely cache the <code>Access Token</code> and <code>Refresh Token</code> returned in this response for use in subsequent DXC API requests.
     * Note the time your obtained the <code>Access Token</code> and the returned <code>expires_in</code> value to calculate the expiration time of this access token.
@@ -143,9 +141,7 @@
     /**
     * @api {post} auth/realms/:realm/protocol/openid-connect/token 01.Refresh
     * @apiName Refresh
-    * @apiDescription
-    *
-    * This KeyCloak service is called to obtain a new <code>Access Token</code> before the current one expires.  After calling this refresh service, applications should retain (and sufficiently secure the new <code>Access Token</code> returned in this response and use it in subsequent DXC API calls inplace of the prior <code>Access Token</code>.  Failing to refresh an <code>Access Token</code> will result in DXC rejected requests with Access Denied once the Access Token has expired.    For security reasons its preferable that applications login only as often as necessary and rely on this refresh mechanism to obtain new <code>Access Tokens</code> rather than issue login request more frequently.
+    * @apiDescription This KeyCloak service is called to obtain a new <code>Access Token</code> before the current one expires.  After calling this refresh service, applications should retain (and sufficiently secure the new <code>Access Token</code> returned in this response and use it in subsequent DXC API calls in place of the prior <code>Access Token</code>.  Failing to refresh an <code>Access Token</code> will result in DXC rejected requests with Access Denied once the Access Token has expired.    For security reasons its preferable that applications login only as often as necessary and rely on this refresh mechanism to obtain new <code>Access Tokens</code> rather than issue login request more frequently.
     *
     * <div style="font-style: italic;">Service Provided by KeyCloak</div>
     *
@@ -219,7 +215,16 @@
     * @apiParam {Boolean} sort.desc whether a property sort is descending
     * @apiParam {String} CAID Claims Administrator Case Number
     * @apiParam {String} IMRID IMR Case Number
-    * @apiParam {String[]} statuses array of string values for statuses
+    * @apiParam {String[]} statuses array of string values for statuses (e.g.: ["1", "3"])
+    * <ul style="list-style: none">
+    * <li>"1" - Received</li>
+    * <li>"2" - Eligibility Review</li>
+    * <li>"3" - Records Requested</li>
+    * <li>"4" - Clinical Review</li>
+    * <li>"5" - Closed</li>
+    * <li>"6" - NOARFI</li>
+    * <li>"7" - Insufficient Records</li>
+    * </ul>
     * @apiParam {Number} start The index of the search results you wish returned. If not supplied or invalid it will be replaced with 0.
     * @apiParam {Number} limit The number of results to return. If not supplied the specific API will select the maximum results to return. If the value is considered too large by the specific API it may alter this value in the response and ignore the supplied value.
     * @apiUse CaseSearchResults
@@ -401,19 +406,17 @@
     /**
     * @api {get} apigw/webservices/rest/apigw/docs/search/cn/:imrCaseNumber 00.Search
     * @apiName SearchDocs
+    * @apiDescription This request returns a list of documents (and their renderings) for a specified case.  Each logical document will have one or more document renderings.  These renderings represent the actual files that have been uploaded.  The first content rendering listed for a document is the original artifact that was provided.  Occassionally additional renderings may be available for a document item.  These represent alternate presenations of the same logical information (all document renderings for a document item are semantically idential).  <span style="font-style: italic;">When attempting a document download you will need to use the </span><code>identifier</code><span style="font-style: italic;"> of the specific </span><span style="font-style: italic; font-weight: 700">rendering</span><span style="font-style: italic;"> you are looking to retrieve.</span>
     *
     * @apiGroup Documents
     *
     * @apiHeader {String} Authorization Bearer <code>JWT Access Token</code>
     * @apiHeader {String} Accepts application/json
-
+    * 
     * @apiParam {String} imrCaseNumber IMR Case Number <span style="font-style: italic">(sent in path)</span>
     * @apiUse ErrorResponse
     * @apiVersion 0.9.0
-    */
-
-    /**
-    * @apiIgnore --- this segment is part of the above Document Search, but the response format is still being revised.
+    * 
     * @apiExample {json} Document Search
     * GET /apigw/webservices/rest/apigw/docs/search/cn/CM16-10000005 HTTP/1.1
     * User-Agent: curl/7.19.7 (x86_64-redhat-linux-gnu)
@@ -421,19 +424,19 @@
     * Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJmMmQxN2ZlZC0yZGI4LTQ2NjItYjQzNy0zZjgzYzIzM2NlN2IiLCJleHAiOjE0NzE1ODUwODIsIm5iZiI6MCwiaWF0IjoxNDcxNTgxNDgyLCJpc3MiOiJodHRwOi8vaW1yLWNhLXNhbmRib3gubWF4aXJkLmNvbS9hdXRoL3JlYWxtcy9keGMtZXh0ZXJuYWxzIiwiYXVkIjoiZHhjIiwic3ViIjoiODYxNTI5OWQtMzY5MC00ZThhLWJjYmEtNzlmNTNmYjQ5ODA0IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiZHhjIiwic2Vzc2lvbl9zdGF0ZSI6ImM0ZThmODFiLTdhY2QtNGU5OC1iNjc3LTUzYmYxYjIzMzc1OSIsImNsaWVudF9zZXNzaW9uIjoiNDA3MzQxMzMtOGQ0Mi00ZDI3LTg2MmYtMTdmOTI4MjQ2ZTliIiwiYWxsb3dlZC1vcmlnaW5zIjpbXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIkRlZmF1bHQgU2VydmljZSBSb2xlIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiZHhjIjp7InJvbGVzIjpbImNhc2UuYWxsIiwiY2FzZS5hcHBlbmQiLCJjYXNlLmFzc2lnbiIsImNhc2UuY29tbWVudCIsImNhc2UuYWRtaW4iLCJjYXNlLnN0YXRlIiwiY2FzZS5pZGVudGlmaWVycyIsImNhc2UudHJhbnNmZXIiLCJjYXNlLnZpZXciLCJjYXNlLmludml0ZSJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsInZpZXctcHJvZmlsZSJdfX0sInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UuemVzdHkyQG1heGlyZC5jb20iLCJnaXZlbl9uYW1lIjoiWkVTVFlaRUJSQSIsImZhbWlseV9uYW1lIjoiU2VydmljZSIsImVtYWlsIjoic2VydmljZS56ZXN0eTJAbWF4aXJkLmNvbSIsInBhcnRpY2lwYW50IjoiMjAuNTAwMC4yMTQvcHplc3R5In0.OD-S5raMHug0x8pMO7zHcHwzZuosSWx4cH1ktZ557itofxNUWinQgfvngdSg5cvNYpoEChqwQSz-Vd8GYjkjKrE5E-AK94kTLPE3MfzQ5X4KzRMovChshGVJK-sQCrnZONS77G-_UVXL5fITeWKUZnrarvM1X3kr-O0yMIRaB-DOs_hFK972-hB_zo-QMej0XIrTth-yjl5NwtRXXpKrAjqY-em7EWDL--k1Gd-Q4mj9wCTCxsKnIiElexVTaboz0WSBFxKd43EeCTdRC5bLwBVQvS3USCYBnioRnY79sd3GxELM7Zg8F6zgprlQl1P_lQ_5J8y4jO42qxhei92IlQ
     *
     * @apiSuccess {Object[]} results array of documents for case
-    * @apiSuccess {String} results.identifier the handle for this document
+    * @apiSuccess {String} results.identifier handle for this document item
     * @apiSuccess {String} results.type logical type of this document
-    * @apiSuccess {String[]} results.types
+    * @apiSuccess {String[]} results.types additional types for this document
     * @apiSuccess {String} results.case handle to the case
     * @apiSuccess {String} results.dcn document control number
     * @apiSuccess {String} results.name document name
     * @apiSuccess {Object[]} results.renderings each document will have one or more renderings
-    * @apiSuccess {String} results.renderings.identifier handle for this rendering
+    * @apiSuccess {String} results.renderings.identifier handle for this document rendering (<span style="font-style: italic; font-weight:700">use this for downloads</span>)
     * @apiSuccess {String} results.renderings.type MIME type of this rendering
     * @apiSuccess {Number} results.renderings.size size in bytes of this rendering
 
-    * @apiSuccess {Number} matchCount Number of documents matching search request
-    * @apiSuccess {Number} start The index of the search results you wish returned. If not supplied or invalid it will be replaced with 0.
+    * @apiSuccess {Number} matchCount total number of documents matching search request
+    * @apiSuccess {Number} start The page index of the search results you wish returned. If not supplied or invalid it will be replaced with 0.
     * @apiSuccess {Number} limit The number of results to return. If not supplied the specific API will select the maximum results to return. If the value is considered too large by the specific API it may alter this value in the response and ignore the supplied value.
     *
     * @apiSuccessExample {json} Response
@@ -516,6 +519,8 @@
     /**
     * @api {post} apigw/webservices/rest/apigw/docs/upload/cn/:imrCaseNumber 01.Upload (by IMR Case Number)
     * @apiName UploadDoc
+    * @apiDescription
+    * This request allows users to upload a document for a case.  Once the upload had been fully processed by the DXC storage services, a new document item with one rendering (the file uploaded with this request) will appear in the document search for this case.  In addition to the <code>imrCaseNumber</code>, this request should include the <code>filename</code> (in the Content-Disposition of the first part and the MIME type (in the Content-Type) in the first part). See the Request example.
     *
     * @apiGroup Documents
     *
@@ -524,8 +529,16 @@
     * @apiHeader {String} Accepts application/json
     *
     * @apiParam {String} imrCaseNumber IMR Case Number <span style="font-style: italic;">(sent in path)</span>
-    * @apiParam {String} file name of the file
-    * @apiParam {String} type MIME type of the file
+    * @apiParam {String} Content-Disposition (in header of part1) includes filename (see Request example)
+    * @apiParam {String} Content-Type (in header of part1) MIME type of the file. 
+    * <span style="font-style: italic;"></span> 
+    * Supported types include:
+    * <ul style="list-style: none">
+    * <li>application/pdf</li>
+    * <li>image/jpeg</li>
+    * <li>application/vnd.openxmlformats-officedocument.wordprocessingml.document</li>
+    * <li>application/msword</li>
+    * </ul>
 
     * @apiUse ErrorResponse
     * @apiVersion 0.9.0
@@ -541,8 +554,10 @@
     * Content-Length: 7435
     * Expect: 100-continue
     * Content-Type: multipart/form-data; boundary=----------------------------54835f8f6a22
+    * 
+    * Content-Disposition: form-data; name="file"; filename="medical_record.pdf"
+    * Content-Type: application/pdf
     *
-
     * @apiSuccessExample {json} Response
     * HTTP/1.1 200 OK
     * Server: Apache-Coyote/1.1
@@ -564,7 +579,7 @@
     * @api {post} apigw/webservices/rest/apigw/docs/upload 02.Upload (legacy)
     * @apiName UploadDocLegacy
     * @apiDescription
-    * For legacy MOVEit users.  The IMR case id is inferred from the file name.
+    * For legacy MOVEit users.  The IMR case id is inferred from the file name.   The <code>filename</code> and MIME type are specified in the first part Content-Disposition and Content-Type headers respectively.  Except for the imrCaseNumber pattern in the file name, this request is handled the same as a normal file upload.
     *
     * @apiGroup Documents
     *
@@ -572,8 +587,16 @@
     * @apiHeader {String} Content-Type multipart/form-data
     * @apiHeader {String} Accepts application/json
 
-    * @apiParam {String} file file name (must be of a recognized format such as: <code>{IMRCaseNumber}_{NNN}.pdf</code>)
-    * @apiParam {String} type MIME type of the file
+    * @apiParam {String} Content-Disposition (in header of part1) includes filename (must be of a recognized format such as: <code>{IMRCaseNumber}_{NNN}.pdf</code>)
+    * @apiParam {String} Content-Type (in header of part1) MIME type of the file. 
+    * <span style="font-style: italic;"></span> 
+    * Supported types include:
+    * <ul style="list-style: none">
+    * <li>application/pdf</li>
+    * <li>image/jpeg</li>
+    * <li>application/vnd.openxmlformats-officedocument.wordprocessingml.document</li>
+    * <li>application/msword</li>
+    * </ul>
 
     * @apiUse ErrorResponse
     *
@@ -587,7 +610,7 @@
     * @apiDescription
     *
     * This service allows downloading files for cases you are authorized to view.  In production, these files will likely contain PHI and the recieving application is cautioned to take appropriate security measures.
-    * Please note that the <code>handle</code> parameter will likely contain a forward slash character '/' (e.g. a <code>handle</code> may look like: <code>20.5000.214/6baef007ce0dd9b9d61d</code>).  Since <code>handle</code>s are sent as part of the request path, it might be tempting to URL encode them prior to building the path.  Please <span style="font-weight:700">DON'T</span> do this.  See the GET at the begining of the example to see how the serice should be called.
+    * Please note that the <code>handle</code> parameter will likely contain a forward slash character '/' (e.g. a <code>handle</code> may look like: <code>20.5000.214/6baef007ce0dd9b9d61d</code>).  Since <code>handle</code>s are sent as part of the request path, it might be tempting to URL encode them prior to building the path.  Please <span style="font-weight:700">DON'T</span> do this.  See the GET at the begining of the example to see how the service should be called.
     *
     *
     * @apiGroup Documents
