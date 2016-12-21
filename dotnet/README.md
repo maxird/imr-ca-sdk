@@ -1,6 +1,6 @@
 # IMR CA .NET API Examples
 
-These folders contain C# libaries along with
+These folders contain C# libraries along with
 demonstration console applications for interacting
 with the authentication and document exchange
 services.
@@ -118,7 +118,7 @@ NOTE: If your implementation does not reuse tokens and also does not
 properly terminate sessions your service account may be disabled
 until the implementation issue is addressed.
 
-### AUTHENTICATION LIFECYCLE
+### AUTHENTICATION LIFE CYCLE
 
 * First contact requires authentication with credentials
   * successful login returns both an `access_token` and
@@ -203,11 +203,11 @@ that you cache tokens and reuse them.
 
 Folder: [`./src/Auth.Refresh/`](src/Auth.Refresh/)
 
-This sample demonstrates the behaviour when a refresh token must
+This sample demonstrates the behavior when a refresh token must
 be used to establish a new access token.
 
 The sandbox environment has been configured with a short token
-lifecycle so you can see this behaviour. The sample logs in
+life cycle so you can see this behavior. The sample logs in
 (or refreshes as necessary) and then waits for a set time to
 ensure the active access token has expired. It then attempts
 to use the token again which will result in an automatic request
@@ -337,7 +337,7 @@ This sample perform an upload of a file to a case. To see
 an example of getting a case number have a look at the
 [Case Search Sample](#case-search-sample).
 
-### SAMPLE OUTPUT
+### RUNNING
 
     dotnet restore
     dotnet run <caseNumber> <filename> <title>
@@ -350,6 +350,47 @@ an example of getting a case number have a look at the
     [dxc]: file: Error Upload Testing.pdf as application/pdf
     [dxc]: response: 200 == text/plain == SUCCESS
     document uploaded
+
+## NOARFI LIST SAMPLE
+
+Folder: [`./src/Events.Noarfi.List/`](src/Events.Noarfi.List/)
+
+This sample returns the list of non-acknowledged NOARFI event lists
+that are present.
+
+### RUNNING
+
+    dotnet restore
+    dotnet run
+
+### SAMPLE OUTPUT
+
+    [auth]: returning cached access token
+    [dxc]: remote request http://imr-ca-sandbox.maxird.com/apigw/webservices/rest/apigw/events/noarfi/
+    [dxc]: response: [OK / application/json]
+    [dxc]: response: [{
+      "datelist": []
+    }]
+
+## NOARFI EVENT GET SAMPLE
+
+Folder: [`./src/Events.Noarfi.Get/`](src/Events.Noarfi.Get/)
+
+This sample returns NOARFI events for a given date. If no content
+is available a response of 'NO_MATCHING_DATA' is returned.
+
+### RUNNING
+
+    dotnet restore
+    dotnet run <yyyy-mm-dd>
+
+### SAMPLE OUTPUT
+
+    [auth]: returning cached access token
+    [dxc]: remote request http://imr-ca-sandbox.maxird.com/apigw/webservices/rest/apigw/events/noarfi/2016-12-20
+    [dxc]: response: [OK / text/plain]
+    [dxc]: response: [NO_MATCHING_DATA]
+    NO_MATCHING_DATA
 
 ## LIBRARIES
 

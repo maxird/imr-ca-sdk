@@ -12,7 +12,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -22,16 +26,12 @@ import java.util.Map;
  * api.properties    contains properties relevant to the IMR REST api
  */
 public class IMRRESTRequestor extends RESTRequestor {
-    /**
-     * @refer api.properties
-     */
+    private static DateFormat iso8601Format = new SimpleDateFormat("yyyy-MM-dd");
+
+    /*
+     * @refer config.properties
+      */
     private static final String API_ENDPOINT_BASE = "api.endpoint.base";
-    private static final String CASE_DOCUMENT_LIST = "case.document.list";
-    private static final String CASE_SEARCH = "case.search.api";
-    private static final String CASE_UPLOAD_DOCUMENT = "case.upload.document";
-    private static final String DOWNLOAD_DOCUMENT = "download.document";
-    private static final String FILE_UPLOAD_DOCUMENT = "file.upload.document";
-    private static final String RFI_SEARCH = "rfi.search.api";
 
     protected static final String NO_MATCHING_DATA = "NO_MATCHING_DATA";
     protected static NumberFormat numberFormat = NumberFormat.getInstance();
@@ -55,7 +55,7 @@ public class IMRRESTRequestor extends RESTRequestor {
 
     public String casesSearch(CaseCriterion params, RETURN_TYPE return_type) {
 
-        String url = urlBuilder(getConfigProperty(API_ENDPOINT_BASE), getApiProperty(CASE_SEARCH));
+        String url = urlBuilder(getConfigProperty(API_ENDPOINT_BASE), "webservices/rest/apigw/cases/search");
 
         Client client = Client.create();
 
@@ -100,6 +100,103 @@ public class IMRRESTRequestor extends RESTRequestor {
         return casesSearch(new CaseCriterion(), return_type);
     }
 
+    /**
+     * Fetch dates with noarfi with outstanding requests
+     * @return json string containing dates in ISO 8601 (i.e. yyyy-MM-dd).
+     */
+    public String noarfiFetch() {
+
+        String url = urlBuilder(getConfigProperty(API_ENDPOINT_BASE), "webservices/rest/apigw/events/noarfi");
+
+        Client client = Client.create();
+
+        WebResource webResource = client.resource(url);
+
+
+        ClientResponse response = webResource
+                .header(CONTENT_TYPE, "application/json")
+                .header(ACCEPT, _getDataType(RETURN_TYPE.JSON))
+                .header(AUTH, bearerAuth())
+                .get(ClientResponse.class);
+
+        checkStatus(response);
+        String responseString = response.getEntity(String.class);
+        return responseString;
+    }
+
+    /**
+     * noarfiDetail fetch noarfi detail for a given date
+     * @param noarfiDate the date for which noarfi detail is returned
+     * @return noarfi detail in csv format
+     */
+    public String noarfiDetail(Date noarfiDate) {
+        String noarfiString = iso8601Format.format(noarfiDate);
+        return noarfiDetail(noarfiString);
+    }
+
+    /**
+     * fetch noarfiDetail
+     * @param noarfiDate date in ISO 8601 (i.e. yyyy-MM-dd)
+     * @return the noarfi detail @see noarfiDetail(String noarfiDate)
+     */
+    public String noarfiDetail(String noarfiDate) {
+        // validate the incoming date
+        try {
+            iso8601Format.parse(noarfiDate);
+        }
+        catch (ParseException e) {
+            throw new IllegalArgumentException("Bad date format.  Expecting YYYY-MM-dd", e) ;
+        }
+
+        String url = urlBuilder(getConfigProperty(API_ENDPOINT_BASE), "webservices/rest/apigw/events/noarfi", noarfiDate);
+
+        Client client = Client.create();
+
+        WebResource webResource = client.resource(url);
+
+
+        ClientResponse response = webResource
+                .header(CONTENT_TYPE, "application/json")
+                .header(ACCEPT, _getDataType(RETURN_TYPE.CSV))
+                .header(AUTH, bearerAuth())
+                .get(ClientResponse.class);
+
+        checkStatus(response);
+        String responseString = response.getEntity(String.class);
+        return responseString;
+    }
+    /**
+     * acknowledge noarfi.  Note!  Acknowledging the noarfi data eliminates it as data points for noarfi/noarfiDetail
+     * @param noarfiDate date gor noarfi request
+     * @return the noarfi detail @see noarfiDetail(String noarfiDate)
+     */
+    public String noarfiAcknowledge(Date noarfiDate) {
+        return noarfiAcknowledge(iso8601Format.format(noarfiDate));
+    }
+
+        /**
+         * acknowledge noarfi.  Note!  Acknowledging the noarfi data eliminates it as data points for noarfi/noarfiDetail
+         * @param noarfiDate date in ISO 8601 (i.e. yyyy-MM-dd)
+         * @return the noarfi detail @see noarfiDetail(String noarfiDate)
+         */
+    public String noarfiAcknowledge(String noarfiDate) {
+        String noarfiDetail = noarfiDetail(noarfiDate);
+        String url = urlBuilder(getConfigProperty(API_ENDPOINT_BASE), "webservices/rest/apigw/events/noarfi", noarfiDate);
+
+        Client client = Client.create();
+
+        WebResource webResource = client.resource(url);
+
+/**
+        ClientResponse response = webResource
+                .header(CONTENT_TYPE, "application/json")
+                .header(ACCEPT, _getDataType(RETURN_TYPE.CSV))
+                .header(AUTH, bearerAuth())
+
+        checkStatus(response);
+ */
+        return noarfiDetail;
+    }
 
     /**
      * RFI SEARCH API
@@ -121,7 +218,7 @@ public class IMRRESTRequestor extends RESTRequestor {
      */
     public String rfiSearch(RETURN_TYPE return_type) {
 
-        String url = urlBuilder(getConfigProperty(API_ENDPOINT_BASE), getApiProperty(RFI_SEARCH));
+        String url = urlBuilder(getConfigProperty(API_ENDPOINT_BASE), "webservices/rest/apigw/cases/searchrfi");
 
         Client client = Client.create();
 
@@ -146,7 +243,7 @@ public class IMRRESTRequestor extends RESTRequestor {
      * @return a JSON String
      */
     public String getDocumentList(String caseNumber) {
-        String url = urlBuilder(getConfigProperty(API_ENDPOINT_BASE), getApiProperty(CASE_DOCUMENT_LIST), caseNumber);
+        String url = urlBuilder(getConfigProperty(API_ENDPOINT_BASE), "webservices/rest/apigw/docs/search/cn", caseNumber);
 
         Client client = Client.create();
 
@@ -166,6 +263,7 @@ public class IMRRESTRequestor extends RESTRequestor {
         }
         return gson.toJson(responseMap);
     }
+
     /**
      * DOCUMENT API
      * http://10.23.1.75:8090/webservices/rest/apigw/docs/download/20.5000.214/07ec0c0348e1f49a87a3 -o file1.zip
@@ -177,7 +275,7 @@ public class IMRRESTRequestor extends RESTRequestor {
      */
     public File downloadDocument(String documentId, String fileName) throws IOException {
         File file = new File(fileName);
-        String url = urlBuilder(getConfigProperty(API_ENDPOINT_BASE), getApiProperty(DOWNLOAD_DOCUMENT), documentId);
+        String url = urlBuilder(getConfigProperty(API_ENDPOINT_BASE), "webservices/rest/apigw/docs/download", documentId);
 
         WebResource webResource = Client.create().resource(url);
         ClientResponse response = webResource
@@ -219,20 +317,21 @@ public class IMRRESTRequestor extends RESTRequestor {
      * @return http status
      */
     public int uploadDocument(String caseNumber, File file) {
-        String url = urlBuilder(getConfigProperty(API_ENDPOINT_BASE), getApiProperty(CASE_UPLOAD_DOCUMENT), caseNumber);
+        String url = urlBuilder(getConfigProperty(API_ENDPOINT_BASE), "webservices/rest/apigw/docs/upload/cn", caseNumber);
 
-       return _uploadDocument(url, file);
+        return _uploadDocument(url, file);
 
     }
+
     /**
      * Upload a document to a case
      *
-     * @param file       the File to be uploaded
+     * @param file the File to be uploaded
      * @return http status
      */
     public int uploadDocument(File file) {
-        String url = urlBuilder(getConfigProperty(API_ENDPOINT_BASE), getApiProperty(FILE_UPLOAD_DOCUMENT));
-         return _uploadDocument(url, file);
+        String url = urlBuilder(getConfigProperty(API_ENDPOINT_BASE), "webservices/rest/apigw/docs/upload");
+        return _uploadDocument(url, file);
 
     }
 
@@ -248,7 +347,8 @@ public class IMRRESTRequestor extends RESTRequestor {
         }
         return "." + type.substring(type.lastIndexOf("/") + 1);
     }
-    private int _uploadDocument(String url, File file){
+
+    private int _uploadDocument(String url, File file) {
         FormDataMultiPart multiPart = new FormDataMultiPart();
         multiPart.bodyPart(new FileDataBodyPart("file", file));
         WebResource webResource = Client.create().resource(url);
@@ -261,21 +361,22 @@ public class IMRRESTRequestor extends RESTRequestor {
 
     }
 
-    private String _getDataType(RETURN_TYPE type){
-        switch (type){
+    private String _getDataType(RETURN_TYPE type) {
+        switch (type) {
             case CSV:
                 return TEXT_PLAIN;
             case JSON:
                 return APP_JSON;
             default:
-                throw new IllegalArgumentException(type+ "is unknown");
+                throw new IllegalArgumentException(type + "is unknown");
         }
     }
-    private String _getReturn(ClientResponse response, RETURN_TYPE return_type){
+
+    private String _getReturn(ClientResponse response, RETURN_TYPE return_type) {
         switch (return_type) {
             case CSV: {
-                String retval =  response.getEntity(String.class);
-                if (retval.length() == 0){
+                String retval = response.getEntity(String.class);
+                if (retval.length() == 0) {
                     return NO_MATCHING_DATA;
                 }
                 return retval;

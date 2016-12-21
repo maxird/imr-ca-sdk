@@ -1,3 +1,6 @@
+.classpath
+.project
+.settings
 .com.maximus.imr.rest.RESTRequestor.token.json
 *.zip
 *.pdf
@@ -6,4 +9,3 @@
 target
 ../java-sdk
 **/*.log
-

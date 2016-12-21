@@ -1,10 +1,8 @@
 ﻿using System;
-using System.IO;
 using Maximus.IRD.Samples.Common;
 using Maximus.IRD.Samples.Config;
 using Maximus.IRD.Samples.DXCClient;
 using Maximus.IRD.Samples.KeycloakClient;
-using static Maximus.IRD.Samples.DXCClient.CaseSearchCriteria;
 
 namespace ConsoleApplication
 {

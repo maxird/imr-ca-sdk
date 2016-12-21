@@ -10,7 +10,7 @@ namespace Maximus.IRD.Samples.DXCClient
     public class CaseSearchCriteria
     {
         /// <summary>
-        /// Internal repesentation of JSON sort parameter
+        /// Internal representation of JSON sort parameter
         /// </summary>
         protected internal class CaseSortItem
         {

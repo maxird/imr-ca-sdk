@@ -17,6 +17,7 @@ import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,6 +124,14 @@ public class IMRRESTRequestorTest extends BaseRESTRequestorTest {
         System.out.println(csvString);
         System.out.println("===============================================");
     }
+    @Test
+    public void testVersion() {
+        String versionString = rr.version();
+        assertNotNull("Looking for a non-null return", versionString);
+        System.out.println("version()");
+        System.out.println(versionString);
+        System.out.println("===============================================");
+    }
 
     @Test
     // see curl/document-list.sh
@@ -149,6 +158,20 @@ public class IMRRESTRequestorTest extends BaseRESTRequestorTest {
             int retval = rr.uploadDocument(caseNumber, file);
             assertTrue(retval >= 200 && retval < 300);
         }
+    }
+    @Test
+    // see curl/noarfi.sh
+    public void fetchNoarfiTest() throws IOException {
+        String data = rr.noarfiFetch();
+        assertNotNull(data);
+        assertTrue(data.length() >0);
+    }
+    @Test
+    // see curl/noarfi.sh
+    public void fetchNoarfiDetail() throws IOException {
+        String data = rr.noarfiDetail("2016-11-30");
+        assertNotNull(data);
+        assertTrue(data.length() >0);
     }
 
     @Test

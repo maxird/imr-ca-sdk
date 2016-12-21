@@ -191,6 +191,43 @@ namespace Maximus.IRD.Samples.DXCClient
             CheckResponse(result);
         }
 
+        private dynamic DataGetRequest(string servicePath, bool json = true)
+        {
+            // get the auth token
+            //
+            var bearerToken = tokenProvider.GetToken();
+
+            // issue the request
+            //
+            var url = string.Format(URL_SPEC, apiBaseUrl, servicePath);
+            Log(String.Format("remote request {0}", url));
+
+            // construct the client
+            //
+            var client = new HttpClient();
+            client.DefaultRequestHeaders
+                .Accept
+                .Add(new MediaTypeWithQualityHeaderValue("*/*"))
+                ;
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {bearerToken}");
+
+            // execute the task
+            //
+            var task = client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+            var response = task.Result;
+            var text = response.Content.ReadAsStringAsync().Result;
+            Log(String.Format("response: [{0} / {1}]", response.StatusCode, response.Content.Headers.ContentType));
+            if (!response.IsSuccessStatusCode)
+                Log(String.Format("content:  {0}", text));
+
+            if (json) {
+                dynamic result = JsonConvert.DeserializeObject(text);
+                CheckResponse(result);
+                return result;
+            }
+            return text;
+        }
+
         private void FileGetRequest(string filename, string servicePath)
         {
             // get the auth token
@@ -309,6 +346,24 @@ namespace Maximus.IRD.Samples.DXCClient
             }
 
             FilePostRequest(filename, title, servicePath);
+        }
+
+        public String[] GetNoarfiList()
+        {
+            var servicePath = $"events/noarfi/";
+            var result = DataGetRequest(servicePath);
+
+            Log($"response: [{result}]");
+            return result.datelist.ToObject<string[]>();
+        }
+
+        public dynamic GetNoarfiEvents(string date)
+        {
+            var servicePath = $"events/noarfi/{date}";
+            var result = DataGetRequest(servicePath, false);
+
+            Log($"response: [{result}]");
+            return result;
         }
     }
 }

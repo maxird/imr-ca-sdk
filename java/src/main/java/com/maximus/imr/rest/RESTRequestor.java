@@ -40,7 +40,6 @@ public abstract class RESTRequestor {
     public static final String APP_TEXT = "application/text";
     public static final String TEXT_PLAIN = "text/plain";
 
-    private Properties apiProperties = new Properties();
     private Properties configProperties = new Properties();
 
     protected String keycloakUrl;
@@ -96,6 +95,20 @@ public abstract class RESTRequestor {
         }
         ;
     }
+    public final String version () {
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream("config/version.txt");
+        byte buffer[] = new byte[1024];
+        String retval = null;
+        try {
+            int bytesRead = is.read(buffer);
+            retval = new String(buffer,0,bytesRead);
+        }
+        catch (IOException e) {
+            retval = "Unknown Version";
+        }
+        return retval;
+
+    }
 
     /**
      * construct using configroot.  -Dcom.maximus.ird.configroot=/pathname/to/configuration directory containing api.properties
@@ -107,7 +120,6 @@ public abstract class RESTRequestor {
     public RESTRequestor(String userName, String password) {
         String configRoot = System.getProperty("com.maximus.ird.configroot", "./config");
         try {
-            apiProperties.load(getStream(configRoot + "/api.properties"));
             configProperties.load(getStream(configRoot + "/config.properties"));
 
         }
@@ -423,11 +435,6 @@ public abstract class RESTRequestor {
     protected void checkStatus(ClientResponse response) {
         checkStatus(response.getStatus());
 
-    }
-
-    protected String getApiProperty(String key) {
-        String retval = apiProperties.getProperty(key);
-        return retval;
     }
 
     protected String getConfigProperty(String key) {

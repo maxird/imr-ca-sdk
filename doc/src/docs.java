@@ -42,7 +42,7 @@
     * @apiSuccess {String} results.claimNumber "10000001"
     * @apiSuccess {String} results.caseNumber "CM16-10000001"
     * @apiSuccess {String} results.dateOfInjury Date/Time (ISO 8601) expressed in UTC
-    * @apiSuccess {String} results.priority "Normal" or "Expedited"
+    * @apiSuccess {String} results.priority Standard or Expedited
     * @apiSuccess {String} results.injuredWorkerPrefix
     * @apiSuccess {String} results.injuredWorkerFirstName
     * @apiSuccess {String} results.injuredWorkerLastName
@@ -91,7 +91,7 @@
     * @apiDescription DXC web services use KeyCloak for OAuth2 (more information <a href="http://imrcasdk.maxird.com/oauthoverview.html">here</a>).
     * Call this KeyCloak API first to login with your valid system service account credentials (see <a href="http://imrcasdk.maxird.com/oauthoverview.html#imr-ca-oauth-account-link">here</a> on how to get credentials).
     * Securely cache the <code>Access Token</code> and <code>Refresh Token</code> returned in this response for use in subsequent DXC API requests.
-    * Note the time your obtained the <code>Access Token</code> and the returned <code>expires_in</code> value to calculate the expiration time of this access token.
+    * Note the time you obtained the <code>Access Token</code> and the returned <code>expires_in</code> value to calculate the expiration time of this access token.
     * On all subsequent API requests with DXC, pass along the <code>Access Token</code> in the HTTP Authorization header field.
     * Be sure to refresh your <code>Access Token</code> with the Refresh API request before it expires.</li>
     * <div style="font-style: italic;">Service Provided by KeyCloak</div>
@@ -294,7 +294,7 @@
     *       "claimNumber": "10000003",
     *       "caseNumber": "CM16-10000003",
     *       "dateOfInjury": "2013-01-01T09:00:00+0500",
-    *       "priority": "Normal",
+    *       "priority": "Standard",
     *       "injuredWorkerPrefix": "Ms.",
     *       "injuredWorkerFirstName": "Terri",
     *       "injuredWorkerLastName": "Talker",
@@ -322,7 +322,7 @@
     *       "claimNumber": "10000002",
     *       "caseNumber": "CM16-10000002",
     *       "dateOfInjury": "2013-01-01T09:00:00+0500",
-    *       "priority": "Normal",
+    *       "priority": "Standard",
     *       "injuredWorkerPrefix": "Mr.",
     *       "injuredWorkerFirstName": "Waldo",
     *       "injuredWorkerLastName": "Wrangler",
@@ -371,7 +371,7 @@
     * Cras facilisis vestibulum nunc sed eleifend. Etiam viverra, enim quis elementum egestas, nisl nibh ullamcorper ipsum, hendrerit lacinia nisi neque eget magna. Suspendisse scelerisque auctor aliquam. Duis a maximus metus. Vivamus vel fermentum velit. Nullam rutrum ante quis est ultrices, et tempus ex pellentesque. Mauris mollis libero in diam accumsan, vitae sagittis tortor accumsan. In lacus erat, pellentesque sit amet ante a, ullamcorper vulputate felis. Nunc iaculis finibus arcu, eget sollicitudin elit dapibus vel.
     *
     * ",2309 Tulare St,,Fresno,California,93721,Zesty Zebra,Mrs.,Anna,Jones,M,Provider Org,1,,,,,2012-11-27T09:00:00+0500,2016-06-21T09:00:00+0500
-    * 10000003,CM16-10000003,2013-01-01T09:00:00+0500,Normal,Ms.,Terri,Talker,T,,Talking Tall,"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et tellus sapien. Nam sit amet ullamcorper lectus. Curabitur eu dolor dictum lorem eleifend laoreet. Pellentesque odio eros, maximus vitae purus sit amet, elementum facilisis nunc. Integer velit metus, fringilla id elit lobortis, ullamcorper sollicitudin nibh. Duis ac pulvinar libero, ac hendrerit turpis. Duis sollicitudin nunc quis mi ultricies pharetra.
+    * 10000003,CM16-10000003,2013-01-01T09:00:00+0500,Standard,Ms.,Terri,Talker,T,,Talking Tall,"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et tellus sapien. Nam sit amet ullamcorper lectus. Curabitur eu dolor dictum lorem eleifend laoreet. Pellentesque odio eros, maximus vitae purus sit amet, elementum facilisis nunc. Integer velit metus, fringilla id elit lobortis, ullamcorper sollicitudin nibh. Duis ac pulvinar libero, ac hendrerit turpis. Duis sollicitudin nunc quis mi ultricies pharetra.
     *
     * Nullam bibendum vel nisi sed pulvinar. Nam semper venenatis ultricies. Pellentesque quis lectus nisi. Nam eu nibh condimentum, fermentum nibh vitae, lacinia magna. Etiam a orci tincidunt, mollis nunc ut, ullamcorper ex. Aenean faucibus porttitor sapien quis lobortis. Donec rutrum molestie justo, sed pharetra lorem pulvinar sit amet. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed pulvinar iaculis sodales. Etiam dolor nibh, bibendum eget risus sed, interdum volutpat nisl. Curabitur suscipit, est vel ultricies fringilla, libero orci pretium augue, vel tincidunt tortor lectus sit amet mauris. Praesent a luctus diam.
     *
@@ -644,3 +644,361 @@
     * @apiVersion 0.9.0
     */
 
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // NOARFI requests
+
+    /**
+    * @api {get} apigw/webservices/rest/apigw/events/noarfi/ 00.Manifest DateList
+    * @apiName NOARFIDateList
+    * @apiDescription Returns a list of (zero or more) dates for which unacknowledged NOARFI manifest exists. 
+    * The dates reflect the system date when the NOARFI letter was generated. The dates format is ISO 8601 (i.e. yyyy-MM-dd).
+    *
+    * @apiGroup NOARFI
+    *
+    * @apiHeader {String} Authorization Bearer <code>JWT Access Token</code>
+    * @apiHeader {String} Accepts application/json
+    *
+    * @apiExample {json} DateList Search
+    * GET /apigw/webservices/rest/apigw/events/noarfi/ HTTP/1.1
+    * User-Agent: curl/7.19.7 (x86_64-redhat-linux-gnu)
+    * Host: imr-ca-sandbox.maxird.com
+    * Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJmMmQxN2ZlZC0yZGI4LTQ2NjItYjQzNy0zZjgzYzIzM2NlN2IiLCJleHAiOjE0NzE1ODUwODIsIm5iZiI6MCwiaWF0IjoxNDcxNTgxNDgyLCJpc3MiOiJodHRwOi8vaW1yLWNhLXNhbmRib3gubWF4aXJkLmNvbS9hdXRoL3JlYWxtcy9keGMtZXh0ZXJuYWxzIiwiYXVkIjoiZHhjIiwic3ViIjoiODYxNTI5OWQtMzY5MC00ZThhLWJjYmEtNzlmNTNmYjQ5ODA0IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiZHhjIiwic2Vzc2lvbl9zdGF0ZSI6ImM0ZThmODFiLTdhY2QtNGU5OC1iNjc3LTUzYmYxYjIzMzc1OSIsImNsaWVudF9zZXNzaW9uIjoiNDA3MzQxMzMtOGQ0Mi00ZDI3LTg2MmYtMTdmOTI4MjQ2ZTliIiwiYWxsb3dlZC1vcmlnaW5zIjpbXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIkRlZmF1bHQgU2VydmljZSBSb2xlIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiZHhjIjp7InJvbGVzIjpbImNhc2UuYWxsIiwiY2FzZS5hcHBlbmQiLCJjYXNlLmFzc2lnbiIsImNhc2UuY29tbWVudCIsImNhc2UuYWRtaW4iLCJjYXNlLnN0YXRlIiwiY2FzZS5pZGVudGlmaWVycyIsImNhc2UudHJhbnNmZXIiLCJjYXNlLnZpZXciLCJjYXNlLmludml0ZSJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsInZpZXctcHJvZmlsZSJdfX0sInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UuemVzdHkyQG1heGlyZC5jb20iLCJnaXZlbl9uYW1lIjoiWkVTVFlaRUJSQSIsImZhbWlseV9uYW1lIjoiU2VydmljZSIsImVtYWlsIjoic2VydmljZS56ZXN0eTJAbWF4aXJkLmNvbSIsInBhcnRpY2lwYW50IjoiMjAuNTAwMC4yMTQvcHplc3R5In0.OD-S5raMHug0x8pMO7zHcHwzZuosSWx4cH1ktZ557itofxNUWinQgfvngdSg5cvNYpoEChqwQSz-Vd8GYjkjKrE5E-AK94kTLPE3MfzQ5X4KzRMovChshGVJK-sQCrnZONS77G-_UVXL5fITeWKUZnrarvM1X3kr-O0yMIRaB-DOs_hFK972-hB_zo-QMej0XIrTth-yjl5NwtRXXpKrAjqY-em7EWDL--k1Gd-Q4mj9wCTCxsKnIiElexVTaboz0WSBFxKd43EeCTdRC5bLwBVQvS3USCYBnioRnY79sd3GxELM7Zg8F6zgprlQl1P_lQ_5J8y4jO42qxhei92IlQ
+    *
+    * @apiSuccess {String[]} datelist array of ISO 8601 dates with NOARFIs
+
+    * @apiSuccessExample {json} Response
+    * HTTP/1.1 200 OK
+    * Server: Apache-Coyote/1.1
+    * X-Content-Type-Options: nosniff
+    * X-XSS-Protection: 1; mode=block
+    * Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+    * Pragma: no-cache
+    * Expires: 0
+    * X-Frame-Options: DENY
+    * Date: Fri, 19 Aug 2016 04:39:30 GMT
+    * Content-Type: application/json
+    * Transfer-Encoding: chunked
+    *
+    * {
+    *   "datelist": [
+    *     “2016-09-05”, 
+    *     “2016-09-06”
+    *   ]
+    * }
+    *     
+    * @apiUse ErrorResponse
+    * @apiVersion 0.9.0
+    */
+
+    /**
+    * @api {get} apigw/webservices/rest/apigw/events/noarfi/:date 01.Details
+    * @apiName NOARFIDetails
+    * @apiDescription Returns the list of NOARFI records for a given date. The date is one of the dates listed in the NOARFI Manifest date list service which has not been acknowledged yet.
+    * Results are sent as CSV.  The first row will be a header row with the field names.  To facilitate adoption with legacy users, an optional "<code>legacy</code>" mode is available.  In legacy mode, the fields will retain their original names and an additional 10 filler fields will be appended to each row.
+    *
+    * <table>
+    *   <thead>
+    *     <tr>
+    *       <th>Default Name</th>
+    *       <th>Legacy Name</th>
+    *       <th>Type</th>
+    *       <th>Comment</th>
+    *     </tr>
+    *   </thead>
+    *   <tbody>
+    *     <tr>
+    *       <td>claimsExaminerFirstName</td>
+    *       <td>C_PARTICIPANT_CONTACT_F_NAME</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td>claimsExaminerLastName</td>
+    *       <td>C_PARTICIPANT_CONTACT_L_NAME</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td>claimsExaminerSuffix</td>
+    *       <td>C_PARTICIPANT_CONTACT_SUFFIX</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td>injuredWorkerSuffix</td>
+    *       <td>IW_SUFFIX</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td>claimsAdministratorAddress1</td>
+    *       <td>C_PARTICIPANT_1ST_STREET_ADDRE</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td>claimsAdministratorAddress2</td>
+    *       <td>C_PARTICIPANT_2ND_STREET_ADDRE</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td>claimsAdministratorCity</td>
+    *       <td>C_PARTICIPANT_CITY</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td>claimsAdministratorState</td>
+    *       <td>C_PARTICIPANT_STATE</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td>claimsAdministratorZipCode</td>
+    *       <td>C_PARTICIPANT_POSTAL_CODE</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td>injuredWorkerFirstName</td>
+    *       <td>IW_F_NAME</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td>injuredWorkerLastName</td>
+    *       <td>IW_L_NAME</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td>caAppealNumber</td>
+    *       <td>C_CA_APPEAL_NUMBER</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td>caseNumber</td>
+    *       <td>C_CASE_NUMBER</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td>systemDateIso</td>
+    *       <td>SYSTEM_DATE</td>
+    *       <td>String</td>
+    *       <td>MM/DD/YYYY</td>
+    *     </tr>
+    *     <tr>
+    *       <td>participantType</td>
+    *       <td>PARTICIPANT_TYPE</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td>providerName</td>
+    *       <td>PROVIDER</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td>claimsAdministratorCompanyName</td>
+    *       <td>C_PARTICIPANT_ORGAN_NAME</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td>claimNumber</td>
+    *       <td>C_CLAIMS_NUMBER</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td>priority</td>
+    *       <td>PRIORITY_TYPE</td>
+    *       <td>String</td>
+    *       <td>Standard or Expedited</td>
+    *     </tr>
+    *     <tr>
+    *       <td>dateOfInjury</td>
+    *       <td>C_INJURY_DATE</td>
+    *       <td>String</td>
+    *       <td>MM/DD/YYYY</td>
+    *     </tr>
+    *     <tr>
+    *       <td>dateofURDecision</td>
+    *       <td>C_UR_DEC_DATE</td>
+    *       <td>String</td>
+    *       <td>MM/DD/YYYY</td>
+    *     </tr>
+    *     <tr>
+    *       <td>treatmentRequested</td>
+    *       <td>C_TXREQ</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td>receiveDate</td>
+    *       <td>C_RCVDATE</td>
+    *       <td>String</td>
+    *       <td>MM/DD/YYYY</td>
+    *     </tr>
+    *     <tr>
+    *       <td><span style="font-style: italic">Not Sent</span></td>
+    *       <td>C_ACKSENTDATE</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td><span style="font-style: italic">Not Sent</span></td>
+    *       <td>SEQUENCE_NUMBER</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td><span style="font-style: italic">Not Sent</span></td>
+    *       <td>FILENAME</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td><span style="font-style: italic">Not Sent</span></td>
+    *       <td>CASECOUNT</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td><span style="font-style: italic">Not Sent</span></td>
+    *       <td>ODD_EVEN</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td><span style="font-style: italic">Not Sent</span></td>
+    *       <td>DOI_COUNT</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td><span style="font-style: italic">Not Sent</span></td>
+    *       <td>C_BARCODE_CASE_NUMBER</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td><span style="font-style: italic">Not Sent</span></td>
+    *       <td>C_BARCODE_PART_TYPE</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td><span style="font-style: italic">Not Sent</span></td>
+    *       <td>C_BARCODE_DOC_TYPE</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *     <tr>
+    *       <td><span style="font-style: italic">Not Sent</span></td>
+    *       <td>C_DOC_TYPE_MR</td>
+    *       <td>String</td>
+    *       <td></td>
+    *     </tr>
+    *   </tbody>
+    * </table>
+    * 
+    * @apiGroup NOARFI
+    *
+    * @apiHeader {String} Authorization Bearer <code>JWT Access Token</code>
+    * @apiHeader {String} Accepts text/plain (response will be CSV)
+    *
+    * @apiParam {String} ManifestDate (yyyy-MM-dd)<span style="font-style: italic">(sent in path)</span>
+    * @apiParam {String} option "<code>legacy</code>"<span style="font-style: italic">(optional url parameter to request legacy format)</span>
+    *
+    *
+    * @apiExample {json} NOARFI Detail 
+    * GET /apigw/webservices/rest/apigw/events/noarfi/datelist/2016-09-27 HTTP/1.1
+    * User-Agent: curl/7.19.7 (x86_64-redhat-linux-gnu)
+    * Host: imr-ca-sandbox.maxird.com
+    * Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJmMmQxN2ZlZC0yZGI4LTQ2NjItYjQzNy0zZjgzYzIzM2NlN2IiLCJleHAiOjE0NzE1ODUwODIsIm5iZiI6MCwiaWF0IjoxNDcxNTgxNDgyLCJpc3MiOiJodHRwOi8vaW1yLWNhLXNhbmRib3gubWF4aXJkLmNvbS9hdXRoL3JlYWxtcy9keGMtZXh0ZXJuYWxzIiwiYXVkIjoiZHhjIiwic3ViIjoiODYxNTI5OWQtMzY5MC00ZThhLWJjYmEtNzlmNTNmYjQ5ODA0IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiZHhjIiwic2Vzc2lvbl9zdGF0ZSI6ImM0ZThmODFiLTdhY2QtNGU5OC1iNjc3LTUzYmYxYjIzMzc1OSIsImNsaWVudF9zZXNzaW9uIjoiNDA3MzQxMzMtOGQ0Mi00ZDI3LTg2MmYtMTdmOTI4MjQ2ZTliIiwiYWxsb3dlZC1vcmlnaW5zIjpbXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIkRlZmF1bHQgU2VydmljZSBSb2xlIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiZHhjIjp7InJvbGVzIjpbImNhc2UuYWxsIiwiY2FzZS5hcHBlbmQiLCJjYXNlLmFzc2lnbiIsImNhc2UuY29tbWVudCIsImNhc2UuYWRtaW4iLCJjYXNlLnN0YXRlIiwiY2FzZS5pZGVudGlmaWVycyIsImNhc2UudHJhbnNmZXIiLCJjYXNlLnZpZXciLCJjYXNlLmludml0ZSJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsInZpZXctcHJvZmlsZSJdfX0sInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UuemVzdHkyQG1heGlyZC5jb20iLCJnaXZlbl9uYW1lIjoiWkVTVFlaRUJSQSIsImZhbWlseV9uYW1lIjoiU2VydmljZSIsImVtYWlsIjoic2VydmljZS56ZXN0eTJAbWF4aXJkLmNvbSIsInBhcnRpY2lwYW50IjoiMjAuNTAwMC4yMTQvcHplc3R5In0.OD-S5raMHug0x8pMO7zHcHwzZuosSWx4cH1ktZ557itofxNUWinQgfvngdSg5cvNYpoEChqwQSz-Vd8GYjkjKrE5E-AK94kTLPE3MfzQ5X4KzRMovChshGVJK-sQCrnZONS77G-_UVXL5fITeWKUZnrarvM1X3kr-O0yMIRaB-DOs_hFK972-hB_zo-QMej0XIrTth-yjl5NwtRXXpKrAjqY-em7EWDL--k1Gd-Q4mj9wCTCxsKnIiElexVTaboz0WSBFxKd43EeCTdRC5bLwBVQvS3USCYBnioRnY79sd3GxELM7Zg8F6zgprlQl1P_lQ_5J8y4jO42qxhei92IlQ
+    *
+    * @apiSuccess {String[]} datelist array of ISO 8601 dates with NOARFIs
+
+    * @apiSuccessExample Default Response
+    * HTTP/1.1 200 OK
+    * Server: Apache-Coyote/1.1
+    * X-Content-Type-Options: nosniff
+    * X-XSS-Protection: 1; mode=block
+    * Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+    * Pragma: no-cache
+    * Expires: 0
+    * X-Frame-Options: DENY
+    * Date: Fri, 19 Aug 2016 04:39:30 GMT
+    * Content-Type: text/plain
+    * Transfer-Encoding: chunked
+    *
+    * claimsExaminerFirstName,claimsExaminerLastName,claimsExaminerSuffix,injuredWorkrSuffix,claimsAdministratorAddress1,claimsAdministratorAddress2,claimsAdministratorCity,claimsAdministratorState,claimsAdministratorZipCode,injuredWorkerFirstName,injuredWorkerLastName,caAppealNumber,caseNumber,systemDateIso,participantType,providerName,claimsAdministratorCompanyName,claimNumber,priority,dateOfInjury,dateofURDecision,treatmentRequested,receiveDate
+    * June,Winds,,,17 Westerly Lane,,Fresno,California,93721,John,Smith,,CM16-10000007,09/27/2016,CLAIMS ADMINISTRATOR,Fred Fraggle,Zesty Zebra,10000007,Standard,12/31/2012,11/26/2012,"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et tellus sapien. ",06/25/2016
+    * June,Winds,,,17 Westerly Lane,,Fresno,California,93721,Steve,Smith,,CM16-10000025,09/27/2016,CLAIMS ADMINISTRATOR,Fred Fraggle,Zesty Zebra,10000025,Standard,2/1/2014,11/26/2014,"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et tellus sapien. Nam sit amet ullamcorper lectus. Curabitur eu dolor dictum lorem eleifend laoreet.",06/25/2016
+    *     
+    * @apiSuccessExample Legacy Response
+    * HTTP/1.1 200 OK
+    * Server: Apache-Coyote/1.1
+    * X-Content-Type-Options: nosniff
+    * X-XSS-Protection: 1; mode=block
+    * Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+    * Pragma: no-cache
+    * Expires: 0
+    * X-Frame-Options: DENY
+    * Date: Fri, 19 Aug 2016 04:39:30 GMT
+    * Content-Type: text/plain
+    * Transfer-Encoding: chunked
+    *
+    * C_PARTICIPANT_CONTACT_F_NAME,C_PARTICIPANT_CONTACT_L_NAME,C_PARTICIPANT_CONTACT_SUFFIX,IW_SUFFIX,C_PARTICIPANT_1ST_STREET_ADDRE,C_PARTICIPANT_2ND_STREET_ADDRE,C_PARTICIPANT_CITY,C_PARTICIPANT_STATE,C_PARTICIPANT_POSTAL_CODE,IW_F_NAME,IW_L_NAME,C_CA_APPEAL_NUMBER,C_CASE_NUMBER,SYSTEM_DATE,PARTICIPANT_TYPE,PROVIDER,C_PARTICIPANT_ORGAN_NAME,C_CLAIMS_NUMBER,PRIORITY_TYPE,C_INJURY_DATE,C_UR_DEC_DATE,C_TXREQ,C_RCVDATE,C_ACKSENTDATE,SEQUENCE_NUMBER,FILENAME,CASECOUNT,ODD_EVEN,DOI_COUNT,C_BARCODE_CASE_NUMBER,C_BARCODE_PART_TYPE,C_BARCODE_DOC_TYPE,C_DOC_TYPE_MR
+    * June,Winds,,,17 Westerly Lane,,Fresno,California,93721,John,Smith,,CM16-10000007,09/27/2016,CLAIMS ADMINISTRATOR,Fred Fraggle,Zesty Zebra,10000007,Standard,12/31/2012,11/26/2012,"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et tellus sapien. ",06/25/2016,,,,,,,,,,
+    * June,Winds,,,17 Westerly Lane,,Fresno,California,93721,Steve,Smith,,CM16-10000025,09/27/2016,CLAIMS ADMINISTRATOR,Fred Fraggle,Zesty Zebra,10000025,Standard,2/1/2014,11/26/2014,"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et tellus sapien. Nam sit amet ullamcorper lectus. Curabitur eu dolor dictum lorem eleifend laoreet.",06/25/2016,,,,,,,,,,
+    *
+    * @apiUse ErrorResponse
+    * @apiVersion 0.9.0
+    */
+
+
+    /**
+    * @api {delete} apigw/webservices/rest/apigw/events/noarfi/:date 02.Acknowledge Manifest Date
+    * @apiName NOARFIAck
+    * @apiDescription Indicate to the system that you have successfully retrieved the NOARFI list for the specified date and to no longer show these records as being available for a manifest download.
+    *
+    * @apiGroup NOARFI
+    *
+    * @apiHeader {String} Authorization Bearer <code>JWT Access Token</code>
+    * @apiHeader {String} Accepts application/json 
+    *
+    * @apiParam {String} ManifestDate (yyyy-MM-dd)<span style="font-style: italic">(sent in path)</span>
+    *
+    * @apiExample Acknowledgement Request
+    * DELETE /apigw/webservices/rest/apigw/events/noarfi/2016-09-27 HTTP/1.1
+    * User-Agent: curl/7.19.7 (x86_64-redhat-linux-gnu)
+    * Host: imr-ca-sandbox.maxird.com
+    * Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOiI5MzFmNGQwNy0wNzhlLTRlNjUtOWFhMC1lOTI1MzE3NDY5YjgiLCJleHAiOjE0NzE3NTQ2MzksIm5iZiI6MCwiaWF0IjoxNDcxNzUxMDM5LCJpc3MiOiJodHRwOi8vaW1yLWNhLXNhbmRib3gubWF4aXJkLmNvbS9hdXRoL3JlYWxtcy9keGMtZXh0ZXJuYWxzIiwiYXVkIjoiZHhjIiwic3ViIjoiODYxNTI5OWQtMzY5MC00ZThhLWJjYmEtNzlmNTNmYjQ5ODA0IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiZHhjIiwic2Vzc2lvbl9zdGF0ZSI6ImFkNjU2NDU0LTFjZjgtNGVhNC05NzE3LWM5OGQ3MDczMzI5MyIsImNsaWVudF9zZXNzaW9uIjoiYTJiOTdhZDEtM2M3OC00NWUzLTg5YzItZDVjYTE5YzQyMWRhIiwiYWxsb3dlZC1vcmlnaW5zIjpbXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIkRlZmF1bHQgU2VydmljZSBSb2xlIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiZHhjIjp7InJvbGVzIjpbImNhc2UuYWxsIiwiY2FzZS5hcHBlbmQiLCJjYXNlLmFzc2lnbiIsImNhc2UuY29tbWVudCIsImNhc2UuYWRtaW4iLCJjYXNlLnN0YXRlIiwiY2FzZS5pZGVudGlmaWVycyIsImNhc2UudHJhbnNmZXIiLCJjYXNlLnZpZXciLCJjYXNlLmludml0ZSJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsInZpZXctcHJvZmlsZSJdfX0sInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UuemVzdHkyQG1heGlyZC5jb20iLCJnaXZlbl9uYW1lIjoiWkVTVFlaRUJSQSIsImZhbWlseV9uYW1lIjoiU2VydmljZSIsImVtYWlsIjoic2VydmljZS56ZXN0eTJAbWF4aXJkLmNvbSIsInBhcnRpY2lwYW50IjoiMjAuNTAwMC4yMTQvcHplc3R5In0.WmQd3b0bo7gntuU4pu4EYr8T4cVzz59z6FTOi3Kx61kpb-XSJsYp8nNFab3ZiKQ6MPmxPXyF7sUFWO4pQlAazoyZvov77_EHx9f4sPlfCWoJ6s0kCvOTT-bTlHV85td5qaWZ-cSB9MrTBLovBYsiezFwOnxZbVLgdzJp8Zw3LaDhKzYs4Xz-PQfhgTyx2Oh1owxqfTRAoYXtBMgB6SEtAPQRI_TOiHm5iZ79sBy_YY_S0w49u1kHCDKxLt9yNfhnytaWDSRpTkWogwsC_5Cdui2oadsxaZQzgY8GG8oewZyYpdLiNDHsQDbVBU3WL3upT0HBJutzCmBWrP-6JPAiSA
+    * Accept: application/json
+    *
+    * @apiSuccessExample Acknoledgement Response
+    * HTTP/1.1 200 OK
+    * Server: Apache-Coyote/1.1
+    * X-Content-Type-Options: nosniff
+    * X-XSS-Protection: 1; mode=block
+    * Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+    * Pragma: no-cache
+    * Expires: 0
+    * X-Frame-Options: DENY
+    * Date: Sun, 21 Aug 2016 04:22:26 GMT
+    * Content-Type: application/json
+    * Transfer-Encoding: chunked
+    *
+    * {"status":200,"msg":"OK"}
+    *
+    * @apiUse ErrorResponse
+    * @apiVersion 0.9.0
+    *
+    */

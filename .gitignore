@@ -1,3 +1,7 @@
 **/*.log
 **/*.swp
-
+**/*.lck
+**/test.properties
+**/config.properties
+**/*.imr
+**/target
