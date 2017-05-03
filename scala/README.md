@@ -37,10 +37,10 @@ was provided to you.
 
     ## provide the location of the auth and api servers
     #
-    authserver.base.url=http://imr-ca-sandbox.maxird.com/auth
-    api.endpoint.base=http://imr-ca-sandbox.maxird.com
+    authserver.base.url=https://imr-ca-sandbox.maxird.com/auth
+    api.endpoint.base=https://imr-ca-sandbox.maxird.com
     authserver.realm=dxc-externals
-    encrypt.rest.user.name=usernme@domain.com
+    encrypt.rest.user.name=username@domain.com
     encrypt.rest.user.name=password
 
 
@@ -147,7 +147,7 @@ See com.maximus.imr.rest.RESTRequestor.
     - RETURN.scala
     - RFICriterion.java
     - RfiSearchService.scala
-    
+
 ## TEST CLASSES INDEX
 - CaseSearchServiceTest.scala
 - DocumentServiceTest.scala

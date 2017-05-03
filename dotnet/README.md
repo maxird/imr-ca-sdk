@@ -32,8 +32,8 @@ that was provided to you.
 
 ```ini
 [servers]
-api=http://imr-ca-sandbox.maxird.com
-auth=http://imr-ca-sandbox.maxird.com
+api=https://imr-ca-sandbox.maxird.com
+auth=https://imr-ca-sandbox.maxird.com
 
 [credentials]
 username=service.zesty@maxird.com
@@ -366,7 +366,7 @@ that are present.
 ### SAMPLE OUTPUT
 
     [auth]: returning cached access token
-    [dxc]: remote request http://imr-ca-sandbox.maxird.com/apigw/webservices/rest/apigw/events/noarfi/
+    [dxc]: remote request https://imr-ca-sandbox.maxird.com/apigw/webservices/rest/apigw/events/noarfi/
     [dxc]: response: [OK / application/json]
     [dxc]: response: [{
       "datelist": []
@@ -387,7 +387,7 @@ is available a response of 'NO_MATCHING_DATA' is returned.
 ### SAMPLE OUTPUT
 
     [auth]: returning cached access token
-    [dxc]: remote request http://imr-ca-sandbox.maxird.com/apigw/webservices/rest/apigw/events/noarfi/2016-12-20
+    [dxc]: remote request https://imr-ca-sandbox.maxird.com/apigw/webservices/rest/apigw/events/noarfi/2016-12-20
     [dxc]: response: [OK / text/plain]
     [dxc]: response: [NO_MATCHING_DATA]
     NO_MATCHING_DATA

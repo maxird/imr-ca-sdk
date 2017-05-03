@@ -36,8 +36,8 @@ was provided to you.
 
     ## provide the location of the auth and api servers
     #
-    authserver.base.url=http://imr-ca-sandbox.maxird.com/auth
-    api.endpoint.base=http://imr-ca-sandbox.maxird.com
+    authserver.base.url=https://imr-ca-sandbox.maxird.com/auth
+    api.endpoint.base=https://imr-ca-sandbox.maxird.com
     authserver.realm=dxc-externals
 
 ### TEST.PROPERTIES

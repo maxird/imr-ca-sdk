@@ -45,7 +45,7 @@ the values. Copy these files to `credentials.sh` and
 
 ```shellscript
 #!/bin/bash
-export DXC_AUTH_SERVER=http://imr-ca-sandbox.maxird.com
+export DXC_AUTH_SERVER=https://imr-ca-sandbox.maxird.com
 export DXC_API_SERVER=$DXC_AUTH_SERVER
 ```
 
