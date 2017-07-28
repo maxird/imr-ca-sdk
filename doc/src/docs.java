@@ -14,7 +14,9 @@
     * @apiDefine ErrorResponse
     * @apiError (Error 4xx) {json} 400 Bad Request
     * @apiError (Error 4xx) {json} 401 Unauthorized
+    * @apiError (Error 4xx) {json} 403 Forbidden
     * @apiError (Error 4xx) {json} 404 Not Found
+    * @apiError (Error 4xx) {json} 413 Request Entity Too Large
     * @apiError (Error 4xx) {json} 415 Unsupported Media Type
     * @apiError (Error 5xx) {json} 500 Server Error
     * @apiError (Error 5xx) {json} 503 Service Unavailable
@@ -88,13 +90,13 @@
     /**
     * @api {post} auth/realms/dxc-externals/protocol/openid-connect/token 00.Login
     * @apiName Login
-    * @apiDescription DXC web services use Keycloak for OAuth2 (more information <a href="http://imrcasdk.maxird.com/oauthoverview.html">here</a>).
-    * Call this Keycloak API first to login with your valid system service account credentials (see <a href="http://imrcasdk.maxird.com/oauthoverview.html#imr-ca-oauth-account-link">here</a> on how to get credentials).
+    * @apiDescription DXC web services use KeyCloak for OAuth2 (more information <a href="http://imrcasdk.maxird.com/oauthoverview.html">here</a>).
+    * Call this KeyCloak API first to login with your valid system service account credentials (see <a href="http://imrcasdk.maxird.com/oauthoverview.html#imr-ca-oauth-account-link">here</a> on how to get credentials).
     * Securely cache the <code>Access Token</code> and <code>Refresh Token</code> returned in this response for use in subsequent DXC API requests.
     * Note the time you obtained the <code>Access Token</code> and the returned <code>expires_in</code> value to calculate the expiration time of this access token.
     * On all subsequent API requests with DXC, pass along the <code>Access Token</code> in the HTTP Authorization header field.
     * Be sure to refresh your <code>Access Token</code> with the Refresh API request before it expires.</li>
-    * <div style="font-style: italic;">Service Provided by Keycloak</div>
+    * <div style="font-style: italic;">Service Provided by KeyCloak</div>
     *
     *
     * @apiParam {String} grant_type Always use "password"
@@ -102,7 +104,7 @@
     * @apiParam {String} username Send your <code>ServiceAccount</code>
     * @apiParam {String} password Send your Service Account <code>Password</code>
     *
-    * @apiVersion 0.9.0
+    * @apiVersion 1.0.0
     *
     * @apiGroup Authentication
     *
@@ -141,16 +143,16 @@
     /**
     * @api {post} auth/realms/:realm/protocol/openid-connect/token 01.Refresh
     * @apiName Refresh
-    * @apiDescription This Keycloak service is called to obtain a new <code>Access Token</code> before the current one expires.  After calling this refresh service, applications should retain (and sufficiently secure the new <code>Access Token</code> returned in this response and use it in subsequent DXC API calls in place of the prior <code>Access Token</code>.  Failing to refresh an <code>Access Token</code> will result in DXC rejected requests with Access Denied once the Access Token has expired.    For security reasons its preferable that applications login only as often as necessary and rely on this refresh mechanism to obtain new <code>Access Tokens</code> rather than issue login request more frequently.
+    * @apiDescription This KeyCloak service is called to obtain a new <code>Access Token</code> before the current one expires.  After calling this refresh service, applications should retain (and sufficiently secure the new <code>Access Token</code> returned in this response and use it in subsequent DXC API calls in place of the prior <code>Access Token</code>.  Failing to refresh an <code>Access Token</code> will result in DXC rejected requests with Access Denied once the Access Token has expired.    For security reasons its preferable that applications login only as often as necessary and rely on this refresh mechanism to obtain new <code>Access Tokens</code> rather than issue login request more frequently.
     *
-    * <div style="font-style: italic;">Service Provided by Keycloak</div>
+    * <div style="font-style: italic;">Service Provided by KeyCloak</div>
     *
     * @apiParam {String} realm Always use "dxc-externals" <span style="font-style: italic">(sent in path)</span>
     * @apiParam {String} grant_type Always use "refresh_token"
     * @apiParam {String} client_id Always use "dxc"
     * @apiParam {String} refresh_token Send your JWT <code>Refresh Token</code>
     *
-    * @apiVersion 0.9.0
+    * @apiVersion 1.0.0
     * @apiGroup Authentication
     *
     * @apiExample OAuth2 Request
@@ -230,7 +232,7 @@
     * @apiUse CaseSearchResults
     *
     * @apiUse ErrorResponse
-    * @apiVersion 0.9.0
+    * @apiVersion 1.0.0
     *
     * @apiExample {json} Search Request
     * POST /apigw/webservices/rest/apigw/cases/search HTTP/1.1
@@ -397,7 +399,7 @@
     * @apiUse CaseSearchResults
     *
     * @apiUse ErrorResponse
-    * @apiVersion 0.9.0
+    * @apiVersion 1.0.0
     */
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -412,11 +414,11 @@
     *
     * @apiHeader {String} Authorization Bearer <code>JWT Access Token</code>
     * @apiHeader {String} Accepts application/json
-    *
+    * 
     * @apiParam {String} imrCaseNumber IMR Case Number <span style="font-style: italic">(sent in path)</span>
     * @apiUse ErrorResponse
-    * @apiVersion 0.9.0
-    *
+    * @apiVersion 1.0.0
+    * 
     * @apiExample {json} Document Search
     * GET /apigw/webservices/rest/apigw/docs/search/cn/CM16-10000005 HTTP/1.1
     * User-Agent: curl/7.19.7 (x86_64-redhat-linux-gnu)
@@ -512,7 +514,7 @@
     * }
     *
     * @apiUse ErrorResponse
-    * @apiVersion 0.9.0
+    * @apiVersion 1.0.0
     */
 
 
@@ -522,26 +524,24 @@
     * @apiDescription
     * This request allows users to upload a document for a case.  Once the upload had been fully processed by the DXC storage services, a new document item with one rendering (the file uploaded with this request) will appear in the document search for this case.  In addition to the <code>imrCaseNumber</code>, this request should include the <code>filename</code> (in the Content-Disposition of the first part and the MIME type (in the Content-Type) in the first part). See the Request example.
     *
+    * <span style="font-weight:700">Note on specifying Document Size</span> <br/>
+    * Upload requests SHOULD include a filesize header that specifies the precise size in bytes of the file being uploaded.  Additionally, the file size can not exceed 500MB.
+    * 
+    *
     * @apiGroup Documents
     *
     * @apiHeader {String} Authorization Bearer <code>JWT Access Token</code>
     * @apiHeader {String} Content-Type multipart/form-data
     * @apiHeader {String} Accepts application/json
+    * @apiHeader {String} filesize File size in bytes
     *
     * @apiParam {String} imrCaseNumber IMR Case Number <span style="font-style: italic;">(sent in path)</span>
-    * @apiParam {String} Content-Disposition (in header of part1) includes filename (see Request example)
-    * @apiParam {String} Content-Type (in header of part1) MIME type of the file.
-    * <span style="font-style: italic;"></span>
-    * Supported types include:
-    * <ul style="list-style: none">
-    * <li>application/pdf</li>
-    * <li>image/jpeg</li>
-    * <li>application/vnd.openxmlformats-officedocument.wordprocessingml.document</li>
-    * <li>application/msword</li>
-    * </ul>
+    * @apiParam {String} Content-Disposition (in header of part1) includes filename (must include <code>.pdf</code> extention)
+    * @apiParam {String} Content-Type (in header of part1) MIME type of the file.   
+    * (<span style="font-style: italic;">only </span><code>application/pdf</code><span style="font-style: italic;"> supported</span>)
 
     * @apiUse ErrorResponse
-    * @apiVersion 0.9.0
+    * @apiVersion 1.0.0
 
     * @apiSuccess {String} status 200
     * @apiSuccess {String} msg OK
@@ -551,10 +551,11 @@
     * User-Agent: curl/7.19.7 (x86_64-redhat-linux-gnu)
     * Host: imr-ca-sandbox.maxird.com
     * Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOiI5MzFmNGQwNy0wNzhlLTRlNjUtOWFhMC1lOTI1MzE3NDY5YjgiLCJleHAiOjE0NzE3NTQ2MzksIm5iZiI6MCwiaWF0IjoxNDcxNzUxMDM5LCJpc3MiOiJodHRwOi8vaW1yLWNhLXNhbmRib3gubWF4aXJkLmNvbS9hdXRoL3JlYWxtcy9keGMtZXh0ZXJuYWxzIiwiYXVkIjoiZHhjIiwic3ViIjoiODYxNTI5OWQtMzY5MC00ZThhLWJjYmEtNzlmNTNmYjQ5ODA0IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiZHhjIiwic2Vzc2lvbl9zdGF0ZSI6ImFkNjU2NDU0LTFjZjgtNGVhNC05NzE3LWM5OGQ3MDczMzI5MyIsImNsaWVudF9zZXNzaW9uIjoiYTJiOTdhZDEtM2M3OC00NWUzLTg5YzItZDVjYTE5YzQyMWRhIiwiYWxsb3dlZC1vcmlnaW5zIjpbXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIkRlZmF1bHQgU2VydmljZSBSb2xlIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiZHhjIjp7InJvbGVzIjpbImNhc2UuYWxsIiwiY2FzZS5hcHBlbmQiLCJjYXNlLmFzc2lnbiIsImNhc2UuY29tbWVudCIsImNhc2UuYWRtaW4iLCJjYXNlLnN0YXRlIiwiY2FzZS5pZGVudGlmaWVycyIsImNhc2UudHJhbnNmZXIiLCJjYXNlLnZpZXciLCJjYXNlLmludml0ZSJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsInZpZXctcHJvZmlsZSJdfX0sInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UuemVzdHkyQG1heGlyZC5jb20iLCJnaXZlbl9uYW1lIjoiWkVTVFlaRUJSQSIsImZhbWlseV9uYW1lIjoiU2VydmljZSIsImVtYWlsIjoic2VydmljZS56ZXN0eTJAbWF4aXJkLmNvbSIsInBhcnRpY2lwYW50IjoiMjAuNTAwMC4yMTQvcHplc3R5In0.WmQd3b0bo7gntuU4pu4EYr8T4cVzz59z6FTOi3Kx61kpb-XSJsYp8nNFab3ZiKQ6MPmxPXyF7sUFWO4pQlAazoyZvov77_EHx9f4sPlfCWoJ6s0kCvOTT-bTlHV85td5qaWZ-cSB9MrTBLovBYsiezFwOnxZbVLgdzJp8Zw3LaDhKzYs4Xz-PQfhgTyx2Oh1owxqfTRAoYXtBMgB6SEtAPQRI_TOiHm5iZ79sBy_YY_S0w49u1kHCDKxLt9yNfhnytaWDSRpTkWogwsC_5Cdui2oadsxaZQzgY8GG8oewZyYpdLiNDHsQDbVBU3WL3upT0HBJutzCmBWrP-6JPAiSA
+    * filesize: 7243
     * Content-Length: 7435
     * Expect: 100-continue
     * Content-Type: multipart/form-data; boundary=----------------------------54835f8f6a22
-    *
+    * 
     * Content-Disposition: form-data; name="file"; filename="medical_record.pdf"
     * Content-Type: application/pdf
     *
@@ -581,26 +582,23 @@
     * @apiDescription
     * For legacy MOVEit users.  The IMR case id is inferred from the file name.   The <code>filename</code> and MIME type are specified in the first part Content-Disposition and Content-Type headers respectively.  Except for the imrCaseNumber pattern in the file name, this request is handled the same as a normal file upload.
     *
+    * <span style="font-weight:700">Note on specifying Document Size</span> <br/>
+    * Upload requests SHOULD include a filesize header that specifies the precise size in bytes of the file being uploaded.  Additionally, the file size can not exceed 500MB.
+    *
     * @apiGroup Documents
     *
     * @apiHeader {String} Authorization Bearer <code>JWT Access Token</code>
     * @apiHeader {String} Content-Type multipart/form-data
     * @apiHeader {String} Accepts application/json
+    * @apiHeader {String} filesize File size in bytes
 
     * @apiParam {String} Content-Disposition (in header of part1) includes filename (must be of a recognized format such as: <code>{IMRCaseNumber}_{NNN}.pdf</code>)
-    * @apiParam {String} Content-Type (in header of part1) MIME type of the file.
-    * <span style="font-style: italic;"></span>
-    * Supported types include:
-    * <ul style="list-style: none">
-    * <li>application/pdf</li>
-    * <li>image/jpeg</li>
-    * <li>application/vnd.openxmlformats-officedocument.wordprocessingml.document</li>
-    * <li>application/msword</li>
-    * </ul>
+    * @apiParam {String} Content-Type (in header of part1) MIME type of the file. 
+    * (<span style="font-style: italic;">only </span><code>application/pdf</code><span style="font-style: italic;"> supported</span>)
 
     * @apiUse ErrorResponse
     *
-    * @apiVersion 0.9.0
+    * @apiVersion 1.0.0
     */
 
 
@@ -641,7 +639,7 @@
     *
     * @apiUse ErrorResponse
     *
-    * @apiVersion 0.9.0
+    * @apiVersion 1.0.0
     */
 
 
@@ -651,7 +649,7 @@
     /**
     * @api {get} apigw/webservices/rest/apigw/events/noarfi/ 00.Manifest DateList
     * @apiName NOARFIDateList
-    * @apiDescription Returns a list of (zero or more) dates for which unacknowledged NOARFI manifest exists.
+    * @apiDescription Returns a list of (zero or more) dates for which unacknowledged NOARFI manifest exists. 
     * The dates reflect the system date when the NOARFI letter was generated. The dates format is ISO 8601 (i.e. yyyy-MM-dd).
     *
     * @apiGroup NOARFI
@@ -682,13 +680,13 @@
     *
     * {
     *   "datelist": [
-    *     “2016-09-05”,
+    *     “2016-09-05”, 
     *     “2016-09-06”
     *   ]
     * }
-    *
+    *     
     * @apiUse ErrorResponse
-    * @apiVersion 0.9.0
+    * @apiVersion 1.0.0
     */
 
     /**
@@ -907,7 +905,7 @@
     *     </tr>
     *   </tbody>
     * </table>
-    *
+    * 
     * @apiGroup NOARFI
     *
     * @apiHeader {String} Authorization Bearer <code>JWT Access Token</code>
@@ -917,7 +915,7 @@
     * @apiParam {String} option "<code>legacy</code>"<span style="font-style: italic">(optional url parameter to request legacy format)</span>
     *
     *
-    * @apiExample {json} NOARFI Detail
+    * @apiExample {json} NOARFI Detail 
     * GET /apigw/webservices/rest/apigw/events/noarfi/datelist/2016-09-27 HTTP/1.1
     * User-Agent: curl/7.19.7 (x86_64-redhat-linux-gnu)
     * Host: imr-ca-sandbox.maxird.com
@@ -941,7 +939,7 @@
     * claimsExaminerFirstName,claimsExaminerLastName,claimsExaminerSuffix,injuredWorkrSuffix,claimsAdministratorAddress1,claimsAdministratorAddress2,claimsAdministratorCity,claimsAdministratorState,claimsAdministratorZipCode,injuredWorkerFirstName,injuredWorkerLastName,caAppealNumber,caseNumber,systemDateIso,participantType,providerName,claimsAdministratorCompanyName,claimNumber,priority,dateOfInjury,dateofURDecision,treatmentRequested,receiveDate
     * June,Winds,,,17 Westerly Lane,,Fresno,California,93721,John,Smith,,CM16-10000007,09/27/2016,CLAIMS ADMINISTRATOR,Fred Fraggle,Zesty Zebra,10000007,Standard,12/31/2012,11/26/2012,"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et tellus sapien. ",06/25/2016
     * June,Winds,,,17 Westerly Lane,,Fresno,California,93721,Steve,Smith,,CM16-10000025,09/27/2016,CLAIMS ADMINISTRATOR,Fred Fraggle,Zesty Zebra,10000025,Standard,2/1/2014,11/26/2014,"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et tellus sapien. Nam sit amet ullamcorper lectus. Curabitur eu dolor dictum lorem eleifend laoreet.",06/25/2016
-    *
+    *     
     * @apiSuccessExample Legacy Response
     * HTTP/1.1 200 OK
     * Server: Apache-Coyote/1.1
@@ -960,7 +958,7 @@
     * June,Winds,,,17 Westerly Lane,,Fresno,California,93721,Steve,Smith,,CM16-10000025,09/27/2016,CLAIMS ADMINISTRATOR,Fred Fraggle,Zesty Zebra,10000025,Standard,2/1/2014,11/26/2014,"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et tellus sapien. Nam sit amet ullamcorper lectus. Curabitur eu dolor dictum lorem eleifend laoreet.",06/25/2016,,,,,,,,,,
     *
     * @apiUse ErrorResponse
-    * @apiVersion 0.9.0
+    * @apiVersion 1.0.0
     */
 
 
@@ -972,7 +970,7 @@
     * @apiGroup NOARFI
     *
     * @apiHeader {String} Authorization Bearer <code>JWT Access Token</code>
-    * @apiHeader {String} Accepts application/json
+    * @apiHeader {String} Accepts application/json 
     *
     * @apiParam {String} ManifestDate (yyyy-MM-dd)<span style="font-style: italic">(sent in path)</span>
     *
@@ -999,6 +997,6 @@
     * {"status":200,"msg":"OK"}
     *
     * @apiUse ErrorResponse
-    * @apiVersion 0.9.0
+    * @apiVersion 1.0.0
     *
     */

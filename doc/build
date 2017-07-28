@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# may need to install some node modules (apidoc)
+# npm install
+
+./node_modules/apidoc/bin/apidoc -i src/ -o dist/

@@ -6,5 +6,5 @@
 #
 # DO NOT CHECK IN THE FILE
 #
-export DXC_AUTH_SERVER=https://imr-ca-sandbox-2.maxird.com
+export DXC_AUTH_SERVER=https://imr-ca-sandbox.maxird.com
 export DXC_API_SERVER=$DXC_AUTH_SERVER

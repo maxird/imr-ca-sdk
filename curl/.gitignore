@@ -1,2 +1,6 @@
 credentials.sh
 servers.sh
+testHarness.sh
+.*
+temp/
+*.pdf

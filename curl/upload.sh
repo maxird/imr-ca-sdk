@@ -22,6 +22,7 @@ fi
 upload_file(){
   filename=$1
   mime=$(file -b --mime-type "$filename")
+  filesize=$(stat -c %s "$filename")
   if [ -z "$mime" ]; then
     mime=application/octet-stream
   fi
@@ -32,6 +33,7 @@ upload_file(){
       --fail \
       -o /dev/null -w "%{http_code}" \
       -H "Authorization: Bearer ${DXC_AUTH_ACCESS_TOKEN}" \
+      -H "filesize: $filesize" \
       -F "file=@$filename; type=$mime" \
       ${DXC_API_SERVER}/apigw/webservices/rest/apigw/docs/upload
   )
@@ -46,6 +48,7 @@ upload_file_to_case(){
   filename=$1
   caseid=$2
   mime=$(file -b --mime-type "$filename")
+  filesize=$(stat -c %s "$filename")
   if [ -z "$mime" ]; then
     mime=application/octet-stream
   fi
@@ -55,6 +58,7 @@ upload_file_to_case(){
       --fail \
       -o /dev/null -w "%{http_code}" \
       -H "Authorization: Bearer ${DXC_AUTH_ACCESS_TOKEN}" \
+      -H "filesize: $filesize" \
       -F "file=@$filename; type=$mime" \
       ${DXC_API_SERVER}/apigw/webservices/rest/apigw/docs/upload/cn/${caseid} \
   )

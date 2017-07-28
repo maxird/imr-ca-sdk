@@ -5,3 +5,4 @@
 **/config.properties
 **/*.imr
 **/target
+**/node_modules

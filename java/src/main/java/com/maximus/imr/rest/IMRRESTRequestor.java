@@ -355,6 +355,7 @@ public class IMRRESTRequestor extends RESTRequestor {
         ClientResponse response = webResource
                 .header(AUTH, bearerAuth())
                 .header(CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
+                .header("filesize", new Long(file.length()))
                 .post(ClientResponse.class, multiPart);
         checkStatus(response);
         return response.getStatus();

@@ -1,0 +1,11 @@
+{
+  "name": "imr-ca-sdk-api-doc",
+  "version": "0.9.1",
+  "description": "IMR CA SDK API Docs",
+  "keywords": [],
+  "author": "brucesaunders",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "apidoc": "0.16.1"
+  }
+}
